@@ -173,7 +173,7 @@ def get_content_with_selenium(url):
     el = get_element(driver, "/html/body")
     c = el.get_attribute('innerHTML')
 
-    if any(kw in el.text for kw in ROBOT_KW):
+    if any(word in el.text for word in ROBOT_word):
         raw_input("Solve captcha manually and press enter here to continue...")
         el = get_element(driver, "/html/body")
         c = el.get_attribute('innerHTML')
@@ -226,7 +226,7 @@ def main():
         print("Loading next {} results".format(n+10))
         page = session.get(url)#, headers=headers)
         c = page.content
-        if any(kw in c.decode('ISO-8859-1') for kw in ROBOT_KW):
+        if any(word in c.decode('ISO-8859-1') for word in ROBOT_word):
             print("Robot checking detected, handling with selenium (if installed)")
             try:
                 c = get_content_with_selenium(url)
