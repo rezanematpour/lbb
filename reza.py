@@ -6,7 +6,7 @@ This code creates a database with a list of publications data from Google
 Scholar.
 The data acquired from GS is Title, Citations, Links and Rank.
 It is useful for finding relevant papers by sorting by the number of citations
-This example will look for the top 100 papers related to the keykw, 
+This example will look for the top 100 papers related to the keyword, 
 so that you can rank them by the number of citations
 
 As output this program will plot the number of citations in the Y axis and the 
@@ -29,11 +29,11 @@ import sys
 if sys.version[0]=="3": raw_input=input
 
 # Default Parameters
-KEYkw = 'machine learning' # Default argument if command line is empty
-SORTBY = 'Citations'
-NRESULTS = 1000 # Fetch 100 articles
+KEYWORD = 'machine learning' # Default argument if command line is empty
+NRESULTS = 100 # Fetch 100 articles
 CSVPATH = os.getcwd() # Current folder as default path
 SAVECSV = True
+SORTBY = 'Citations'
 PLOT_RESULTS = False
 STARTYEAR = None
 now = datetime.datetime.now()
@@ -49,12 +49,12 @@ YEAR_RANGE = '' #&as_ylo={start_year}&as_yhi={end_year}'
 #GSCHOLAR_URL_YEAR = GSCHOLAR_URL+YEAR_RANGE
 STARTYEAR_URL = '&as_ylo={}'
 ENDYEAR_URL = '&as_yhi={}'
-kw=['unusual traffic from your computer network', 'not a robot']
+ROBOT_KW=['unusual traffic from your computer network', 'not a robot']
 
 def get_command_line_args():
     # Command line arguments
     parser = argparse.ArgumentParser(description='Arguments')
-    parser.add_argument('kw', type=str, help="""Keykw to be searched. Use double quote followed by simple quote to search for an exact keykw. Example: "'exact keykw'" """, default=KEYkw)
+    parser.add_argument('kw', type=str, help="""Keyword to be searched. Use double quote followed by simple quote to search for an exact keyword. Example: "'exact keyword'" """, default=KEYWORD)
     parser.add_argument('--sortby', type=str, help='Column to be sorted by. Default is by the columns "Citations", i.e., it will be sorted by the number of citations. If you want to sort by citations per year, use --sortby "cit/year"')
     parser.add_argument('--nresults', type=int, help='Number of articles to search on Google Scholar. Default is 100. (carefull with robot checking if value is too high)')
     parser.add_argument('--csvpath', type=str, help='Path to save the exported csv file. By default it is the current folder')
@@ -72,9 +72,9 @@ def get_command_line_args():
         parser.print_help()
         sys.exit(0)
 
-    keykw = KEYkw
+    keyword = KEYWORD
     if args.kw:
-        keykw = args.kw
+        keyword = args.kw
 
     nresults = NRESULTS
     if args.nresults:
@@ -108,7 +108,7 @@ def get_command_line_args():
     if args.debug:
         debug = True
 
-    return keykw, nresults, save_csv, csvpath, sortby, plot_results, start_year, end_year, debug
+    return keyword, nresults, save_csv, csvpath, sortby, plot_results, start_year, end_year, debug
 
 def get_citations(content):
     out = 0
@@ -173,7 +173,7 @@ def get_content_with_selenium(url):
     el = get_element(driver, "/html/body")
     c = el.get_attribute('innerHTML')
 
-    if any(kw in el.text for kw in ROBOT_kw):
+    if any(kw in el.text for kw in ROBOT_KW):
         raw_input("Solve captcha manually and press enter here to continue...")
         el = get_element(driver, "/html/body")
         c = el.get_attribute('innerHTML')
@@ -184,9 +184,10 @@ def get_content_with_selenium(url):
 
 def main():
     # Get command line arguments
-    keykw, number_of_results, save_database, path, sortby_column, plot_results, start_year, end_year, debug = get_command_line_args()
+    keyword, number_of_results, save_database, path, sortby_column, plot_results, start_year, end_year, debug = get_command_line_args()
 
-    print(f"Number of results: {number_of_results}, Sort by: {sortby_column}, Start year: {start_year}, End year: {end_year}")
+    print("Running with the following parameters:")
+    print(f"Sort by: {sortby_column}, Start year: {start_year}, End year: {end_year}")
 
     # Create main URL based on command line arguments
     if start_year:
@@ -217,16 +218,16 @@ def main():
     # Get content from number_of_results URLs
     for n in range(0, number_of_results, 10):
         #if start_year is None:
-        url = GSCHOLAR_MAIN_URL.format(str(n), keykw.replace(' ','+'))
+        url = GSCHOLAR_MAIN_URL.format(str(n), keyword.replace(' ','+'))
         if debug:
             print("Opening URL:", url)
         #else:
-        #    url=GSCHOLAR_URL_YEAR.format(str(n), keykw.replace(' ','+'), start_year=start_year, end_year=end_year)
+        #    url=GSCHOLAR_URL_YEAR.format(str(n), keyword.replace(' ','+'), start_year=start_year, end_year=end_year)
 
         print("Loading next {} results".format(n+10))
         page = session.get(url)#, headers=headers)
         c = page.content
-        if any(kw in c.decode('ISO-8859-1') for kw in ROBOT_kw):
+        if any(kw in c.decode('ISO-8859-1') for kw in ROBOT_KW):
             print("Robot checking detected, handling with selenium (if installed)")
             try:
                 c = get_content_with_selenium(url)
@@ -289,8 +290,8 @@ def main():
     data.index.name = 'Rank'
 
     # Avoid years that are higher than the current year by clipping it to end_year
-    data['cite']=data['Citations']/(end_year + 1 - data['Year'].clip(upper=end_year))
-    data['cite']=data['cite'].round(0).astype(int)
+    data['cit']=data['Citations']/(end_year + 1 - data['Year'].clip(upper=end_year))
+    data['cite']=data['cit/year'].round(0).astype(int)
 
     # Sort by the selected columns, if exists
     try:
@@ -305,17 +306,16 @@ def main():
 
     # Plot by citation number
     if plot_results:
-        plt.plot(rank[1:],citations,'*')
         plt.ylabel('Citations')
-        plt.title('Keykw: '+keykw)
+        plt.title('Keyword: '+keyword)
         plt.show()
 
     # Save results
     if save_database:
-        fpath_csv = os.path.join(path,keykw.replace(' ','_')+'.csv')
+        fpath_csv = os.path.join(path,keyword.replace(' ','_')+'.csv')
         fpath_csv = fpath_csv[:MAX_CSV_FNAME]
         data_ranked.to_csv(fpath_csv, encoding='utf-8')
-        print('saved to', fpath_csv)
+        print('Results saved to', fpath_csv)
 
 if __name__ == '__main__':
         main()
