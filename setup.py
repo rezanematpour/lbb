@@ -8,7 +8,7 @@ setup(
     description='A Python tool to rank Google Scholar publications by citations.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/WittmannF/sort-google-scholar',
+    url='https://github.com/rezanematpour/lbb',
     py_modules=['reza'],  # Assuming your script is named reza.py
     install_requires=[
         # your dependencies here
@@ -20,8 +20,6 @@ setup(
     },
     classifiers=[
         'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
     ],
     python_requires='>=3.6',
 )
