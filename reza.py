@@ -30,7 +30,7 @@ if sys.version[0]=="3": raw_input=input
 
 # Default Parameters
 KEYWORD = 'machine learning' # Default argument if command line is empty
-NRESULTS = 100 # Fetch 100 articles
+NRESULTS = 1000 # Fetch 100 articles
 CSVPATH = os.getcwd() # Current folder as default path
 SAVECSV = True
 SORTBY = 'Citations'
