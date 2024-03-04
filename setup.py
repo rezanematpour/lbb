@@ -1,7 +1,7 @@
-from setuptools import setup
+zfrom setuptools import setup
 
 setup(
-    name='sortgs',
+    name='reza',
     version='1.0.3',
     author='Fernando Marcos Wittmann',
     #author_email='fernando.wittmann[at]gmail[dot]com',
@@ -9,13 +9,13 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/WittmannF/sort-google-scholar',
-    py_modules=['sortgs'],  # Assuming your script is named sortgs.py
+    py_modules=['reza'],  # Assuming your script is named sortgs.py
     install_requires=[
         # your dependencies here
     ],
     entry_points={
         'console_scripts': [
-            'sortgs=sortgs:main',  # This line sets up the command line tool
+            'reza=reza:main',  # This line sets up the command line tool
         ],
     },
     classifiers=[
