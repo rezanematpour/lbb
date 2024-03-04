@@ -290,8 +290,8 @@ def main():
     data.index.name = 'Rank'
 
     # Avoid years that are higher than the current year by clipping it to end_year
-    data['cit/year']=data['Citations']/(end_year + 1 - data['Year'].clip(upper=end_year))
-    data['cit/year']=data['cit/year'].round(0).astype(int)
+    data['cite/']=data['Citations']/(end_year + 1 - data['Year'].clip(upper=end_year))
+    data['cite']=data['cite'].round(0).astype(int)
 
     # Sort by the selected columns, if exists
     try:
@@ -307,8 +307,8 @@ def main():
     # Plot by citation number
     if plot_results:
         plt.plot(rank[1:],citations,'*')
-        plt.ylabel('Number of Citations')
-        plt.xlabel('Rank of the keyword on Google Scholar')
+        plt.ylabel('Citations')
+        plt.xlabel('Rank')
         plt.title('Keyword: '+keyword)
         plt.show()
 
@@ -317,7 +317,7 @@ def main():
         fpath_csv = os.path.join(path,keyword.replace(' ','_')+'.csv')
         fpath_csv = fpath_csv[:MAX_CSV_FNAME]
         data_ranked.to_csv(fpath_csv, encoding='utf-8')
-        print('Results saved to', fpath_csv)
+        print('saved to', fpath_csv)
 
 if __name__ == '__main__':
         main()
