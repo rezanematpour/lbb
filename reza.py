@@ -30,10 +30,10 @@ if sys.version[0]=="3": raw_input=input
 
 # Default Parameters
 KEYWORD = 'machine learning' # Default argument if command line is empty
+SORTBY = 'Citations'
 NRESULTS = 1000 # Fetch 100 articles
 CSVPATH = os.getcwd() # Current folder as default path
 SAVECSV = True
-SORTBY = 'Citations'
 PLOT_RESULTS = False
 STARTYEAR = None
 now = datetime.datetime.now()
@@ -186,8 +186,7 @@ def main():
     # Get command line arguments
     keyword, number_of_results, save_database, path, sortby_column, plot_results, start_year, end_year, debug = get_command_line_args()
 
-    print("Running with the following parameters:")
-    print(f"Keyword: {keyword}, Number of results: {number_of_results}, Save database: {save_database}, Path: {path}, Sort by: {sortby_column}, Plot results: {plot_results}, Start year: {start_year}, End year: {end_year}, Debug: {debug}")
+    print(f"Number of results: {number_of_results}, Sort by: {sortby_column}, Start year: {start_year}, End year: {end_year}")
 
     # Create main URL based on command line arguments
     if start_year:
@@ -290,7 +289,7 @@ def main():
     data.index.name = 'Rank'
 
     # Avoid years that are higher than the current year by clipping it to end_year
-    data['cite/']=data['Citations']/(end_year + 1 - data['Year'].clip(upper=end_year))
+    data['cite']=data['Citations']/(end_year + 1 - data['Year'].clip(upper=end_year))
     data['cite']=data['cite'].round(0).astype(int)
 
     # Sort by the selected columns, if exists
@@ -308,7 +307,6 @@ def main():
     if plot_results:
         plt.plot(rank[1:],citations,'*')
         plt.ylabel('Citations')
-        plt.xlabel('Rank')
         plt.title('Keyword: '+keyword)
         plt.show()
 
