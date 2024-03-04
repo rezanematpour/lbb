@@ -291,7 +291,7 @@ def main():
 
     # Avoid years that are higher than the current year by clipping it to end_year
     data['cit']=data['Citations']/(end_year + 1 - data['Year'].clip(upper=end_year))
-    data['cite']=data['cit/year'].round(0).astype(int)
+    data['cite']=data['cite'].round(0).astype(int)
 
     # Sort by the selected columns, if exists
     try:
