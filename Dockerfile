@@ -8,4 +8,4 @@ RUN python -m pip install --upgrade pip \
 
 COPY . .
 
-CMD [ './sortgs.py' ]
+CMD [ './reza.py' ]
