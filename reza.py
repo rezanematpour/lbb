@@ -49,12 +49,12 @@ YEAR_RANGE = '' #&as_ylo={start_year}&as_yhi={end_year}'
 #GSCHOLAR_URL_YEAR = GSCHOLAR_URL+YEAR_RANGE
 STARTYEAR_URL = '&as_ylo={}'
 ENDYEAR_URL = '&as_yhi={}'
-ROBOT_KW=['unusual traffic from your computer network', 'not a robot']
+word=['unusual traffic from your computer network', 'not a robot']
 
 def get_command_line_args():
     # Command line arguments
     parser = argparse.ArgumentParser(description='Arguments')
-    parser.add_argument('kw', type=str, help="""Keyword to be searched. Use double quote followed by simple quote to search for an exact keyword. Example: "'exact keyword'" """, default=KEYWORD)
+    parser.add_argument('word', type=str, help="""Keyword to be searched. Use double quote followed by simple quote to search for an exact keyword. Example: "'exact keyword'" """, default=KEYWORD)
     parser.add_argument('--sortby', type=str, help='Column to be sorted by. Default is by the columns "Citations", i.e., it will be sorted by the number of citations. If you want to sort by citations per year, use --sortby "cit/year"')
     parser.add_argument('--nresults', type=int, help='Number of articles to search on Google Scholar. Default is 100. (carefull with robot checking if value is too high)')
     parser.add_argument('--csvpath', type=str, help='Path to save the exported csv file. By default it is the current folder')
@@ -73,8 +73,8 @@ def get_command_line_args():
         sys.exit(0)
 
     keyword = KEYWORD
-    if args.kw:
-        keyword = args.kw
+    if args.word:
+        keyword = args.word
 
     nresults = NRESULTS
     if args.nresults:
